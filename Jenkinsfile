@@ -21,7 +21,7 @@ pipeline {
     post {
         always {
             echo "Cleaning workspace..."
-            cleanWs()  // Очищает рабочую директорию
+            deleteDir()  // Очищает рабочую директорию
         }
     }
 }
