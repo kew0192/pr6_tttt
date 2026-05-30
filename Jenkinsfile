@@ -20,11 +20,8 @@ pipeline {
                                     sourceFiles: '**/*',
                                     remoteDirectory: "/${params.ENV}",
                                     execCommand: """
-                                        echo "========================================="
                                         echo "Deployment to ${params.ENV} completed"
-                                        echo "Files copied to /home/user/deploy/${params.ENV}"
                                         ls -la /home/user/deploy/${params.ENV}/
-                                        echo "========================================="
                                     """
                                 )
                             ]
@@ -38,7 +35,7 @@ pipeline {
     post {
         always {
             echo "Cleaning workspace..."
-            cleanWs()
+            deleteDir()
         }
     }
 }
