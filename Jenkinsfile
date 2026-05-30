@@ -9,8 +9,28 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "Deploying to ${params.ENV}"
-                echo "Copying application files to remote server via SSH..."
-                echo "Files copied to /var/www/app on ${params.ENV} server"
+                
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'my-remote-server',
+                            verbose: true,
+                            transfers: [
+                                sshTransfer(
+                                    sourceFiles: '**/*',
+                                    remoteDirectory: "/${params.ENV}",
+                                    execCommand: """
+                                        echo "========================================="
+                                        echo "Deployment to ${params.ENV} completed"
+                                        echo "Files copied to /home/user/deploy/${params.ENV}"
+                                        ls -la /home/user/deploy/${params.ENV}/
+                                        echo "========================================="
+                                    """
+                                )
+                            ]
+                        )
+                    ]
+                )
             }
         }
     }
@@ -18,8 +38,7 @@ pipeline {
     post {
         always {
             echo "Cleaning workspace..."
-            // cleanWs() - закомментировано, чтобы не вызывало ошибку
-            deleteDir()
+            cleanWs()
         }
     }
 }
