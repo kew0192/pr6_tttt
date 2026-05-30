@@ -2,18 +2,15 @@ pipeline {
     agent any
 
     parameters {
-        choice(name: 'ENV', choices: ['dev', 'prod'], description: 'Выберите окружение для деплоя')
+        choice(name: 'ENV', choices: ['dev', 'prod'], description: 'Select environment')
     }
 
     stages {
         stage('Deploy') {
             steps {
                 echo "Deploying to ${params.ENV}"
-                
-                // Имитация копирования на удаленный сервер через SSH
-                // (без реального SSH-сервера - просто вывод команды)
-                sh 'echo "Copying application files to remote server via SSH..."'
-                sh 'echo "Files copied to /var/www/app on ${params.ENV} server"'
+                echo "Copying application files to remote server via SSH..."
+                echo "Files copied to /var/www/app on ${params.ENV} server"
             }
         }
     }
@@ -21,7 +18,8 @@ pipeline {
     post {
         always {
             echo "Cleaning workspace..."
-            deleteDir()  // Очищает рабочую директорию
+            // cleanWs() - закомментировано, чтобы не вызывало ошибку
+            deleteDir()
         }
     }
 }
